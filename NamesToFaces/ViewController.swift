@@ -44,13 +44,33 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
     @objc func removePerson(at personIndex: Int){
         people.remove(at: personIndex)
     }
-
-    @objc func addNewPerson(){
+    
+    func pickerConfiguration(picker: UIImagePickerController, sourceType: String){
         let picker = UIImagePickerController()
-        picker.sourceType = .photoLibrary
+        
+        if sourceType == "take"{
+            picker.sourceType = .camera
+        } else {
+            picker.sourceType = .photoLibrary
+        }
         picker.allowsEditing = true
         picker.delegate = self
         present(picker, animated: true)
+    }
+    @objc func addNewPerson(){
+        let picker = UIImagePickerController()
+        let ac = UIAlertController(title: "What you want?", message: "Take or choose a picture from gallery?", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Take", style: .default){
+            [weak self] _ in
+            self?.pickerConfiguration(picker: picker, sourceType: "take")
+        })
+        ac.addAction(UIAlertAction(title: "Choose", style: .default){
+            [weak self] _ in
+            
+            self?.pickerConfiguration(picker: picker,sourceType: "choose")
+        })
+        present(ac, animated: true)
+
     }
     
     @objc func rename(_ person: Person){
